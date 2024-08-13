@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-cqtkfcdds78s739o4bg0-a.frankfurt-postgres.render.com:5432/restaurant_xwl4
+    url: jdbc:postgresql://dpg-cqtkfcdds78s739o4bg0-a:5432/restaurant_xwl4
     username: restaurant_xwl4_user
     password: K41jkw2Vobmrn6RqRQVQ9OYLZveK8H76
   jpa:
