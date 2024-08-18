@@ -3,6 +3,7 @@ package pos.restaurant.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,9 +43,6 @@ public class AuthController{
 
     @PostMapping("login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDTO loginDto) {
-//        if(!employeeAccountRepository.existsById(loginDto.getId())){
-//            return new ResponseEntity<>(AuthResponseDto(), HttpStatus.UNAUTHORIZED);
-//        }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getId(),

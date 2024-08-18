@@ -4,7 +4,6 @@ spring:
     username: restaurant_xwl4_user
     password: K41jkw2Vobmrn6RqRQVQ9OYLZveK8H76
   jpa:
-#    postgresql://:@/restaurant_xwl4
     hibernate:
       ddl-auto: update
     show-sql: 'true'

@@ -27,10 +27,10 @@ public class EmployeeAccount implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private boolean accountNonExpired;
+    private boolean accountNonExpired = true;
     private boolean isEnabled = true;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
+    private boolean accountNonLocked = true;
+    private boolean credentialsNonExpired = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

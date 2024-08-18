@@ -33,7 +33,6 @@ public class CustomUserDetailsService  implements UserDetailsService {
         EmployeeAccount user = userRepository.findById(Long.valueOf(id))
                         .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
         User springSecurityUser = new User(user.getUsername(), user.getPin(), user.getAuthorities());
-        System.out.println(springSecurityUser.getUsername() + " " + springSecurityUser.getPassword() + " " + springSecurityUser.getAuthorities() + " " + springSecurityUser.isEnabled() + " " + springSecurityUser.isAccountNonExpired() + " " + springSecurityUser.isAccountNonLocked() + " " + springSecurityUser.isCredentialsNonExpired());
         return springSecurityUser;
     }
 

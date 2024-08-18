@@ -53,11 +53,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests((auth) ->
                         auth
                                 .requestMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/api/auth/register").hasAuthority(Role.ADMIN.name())
+//                                .requestMatchers(HttpMethod.POST,"/api/auth/register").hasAuthority(Role.ADMIN.name())
+                                .requestMatchers(HttpMethod.POST,"/api/auth/register").permitAll()
 //                                .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()
 //                                .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
 //                                .requestMatchers(HttpMethod.PUT, "/api/**").authenticated()
-                                .requestMatchers(HttpMethod.GET, "/api/**").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/api/employeeAccount/getAll").permitAll()
                                 .anyRequest().permitAll()
                 )
                 .csrf(AbstractHttpConfigurer::disable)

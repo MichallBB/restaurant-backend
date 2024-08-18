@@ -1,10 +1,15 @@
 package pos.restaurant.controller;
 
+import jakarta.annotation.security.PermitAll;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pos.restaurant.DTO.EmployeeAccountDto;
+import pos.restaurant.exceptions.EmployeeAccountNotFound;
 import pos.restaurant.models.EmployeeAccount;
+import pos.restaurant.models.Role;
 import pos.restaurant.service.EmployeeAccountService;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -16,13 +21,17 @@ public class EmployeeAccountController {
         this.employeeAccountService = employeeAccountService;
     }
 
-    @PostMapping("/add")
-    public void addEmployeeAccount(@RequestBody EmployeeAccount employeeAccount) {
-        employeeAccountService.addEmployeeAccount(employeeAccount);
+    @GetMapping("/getAll")
+    public ResponseEntity<HashMap<Role, List<EmployeeAccountDto>>> getAllEmployeeAccounts() {
+        return ResponseEntity.ok(employeeAccountService.getAllEmployeeAccounts());
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<List<EmployeeAccount>> getEmployeeAccounts() {
-        return ResponseEntity.ok(employeeAccountService.getEmployeeAccounts());
+    @GetMapping("/{id}")
+    public ResponseEntity<EmployeeAccountDto> getEmployeeAccountById(@PathVariable Long id){
+        try {
+            return ResponseEntity.ok(employeeAccountService.getEmployeeAccountById(id));
+        } catch (EmployeeAccountNotFound e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
