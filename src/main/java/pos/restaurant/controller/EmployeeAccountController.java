@@ -1,6 +1,7 @@
 package pos.restaurant.controller;
 
 import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pos.restaurant.DTO.EmployeeAccountDto;
@@ -33,5 +34,10 @@ public class EmployeeAccountController {
         } catch (EmployeeAccountNotFound e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/getByToken")
+    public ResponseEntity<EmployeeAccountDto> getEmployeeAccountByTokenHeader(HttpServletRequest request){
+        return ResponseEntity.ok(employeeAccountService.getEmployeeAccountByTokenHeader(request));
     }
 }

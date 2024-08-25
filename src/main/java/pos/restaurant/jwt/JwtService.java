@@ -55,7 +55,7 @@ public class JwtService {
                 .getExpiration();
     }
 
-     String extractUsername(String token) {
+    public String extractUsername(String token) {
         return Jwts.parser()
                 .setSigningKey(getSignKey())
                 .build()

@@ -68,6 +68,18 @@
             <version>2.2.0</version>
         </dependency>
 
+        <!-- MAPPER -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.4.2.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.4.2.Final</version>
+        </dependency>
+
         <!-- jjwt -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -87,6 +99,7 @@
     </dependencies>
 
     <build>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
