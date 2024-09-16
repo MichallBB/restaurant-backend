@@ -41,4 +41,8 @@ public class DishService {
         Dish updatedDish = dishRepository.save(dish);
         return DishDto.toDto(updatedDish);
     }
+
+    public void editDish(DishDto dishDto) {
+
+    }
 }

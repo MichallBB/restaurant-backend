@@ -1,5 +1,6 @@
 package pos.restaurant.controller;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,6 @@ public class AuthController{
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
-        System.out.println(token + " token");
         return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
     }
 

@@ -1,5 +1,7 @@
 package pos.restaurant.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,22 +34,30 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            String id = jwtService.extractUsername(token);
 
-            if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails user = customUserDetailsService.loadUserByUsername(id);
+        try{
+            String authHeader = request.getHeader("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                String id = jwtService.extractUsername(token);
 
-                if (jwtService.validateToken(token, user)) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            user, null, user.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                if (id != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    UserDetails user = customUserDetailsService.loadUserByUsername(id);
+
+                    if (jwtService.validateToken(token, user)) {
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                user, null, user.getAuthorities());
+                        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
                 }
             }
+            filterChain.doFilter(request, response);
+        }catch (ExpiredJwtException | MalformedJwtException | AuthenticationCredentialsNotFoundException |
+                BadCredentialsException e){
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write(e.getMessage());
         }
-        filterChain.doFilter(request, response);
+
     }
 }

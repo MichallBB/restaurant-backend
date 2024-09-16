@@ -18,16 +18,9 @@ public class DishCategory {
     private Long id;
 
     private String name;
-    @Setter
-    @Column(name = "is_enabled_column")
-    private boolean isEnabled=true;
     private Integer position;
 
     @OneToMany(mappedBy = "dishCategory", cascade = CascadeType.ALL)
     private List<Dish> dish;
 
-
-    public boolean getIsEnabled() {
-        return isEnabled;
-    }
 }

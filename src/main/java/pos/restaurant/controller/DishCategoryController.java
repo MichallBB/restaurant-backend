@@ -5,10 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pos.restaurant.DTO.DishCategoryDto;
 import pos.restaurant.DTO.DishCategoryNameDto;
+import pos.restaurant.exceptions.DishCategoryNotFound;
 import pos.restaurant.models.Dish;
 import pos.restaurant.models.DishCategory;
 import pos.restaurant.records.ToggleIsDishEnable;
 import pos.restaurant.service.DishCategoryService;
+import pos.restaurant.utils.ApiResponse;
+import pos.restaurant.utils.DishWithCategoryId;
 
 import java.lang.annotation.Documented;
 import java.util.List;
@@ -23,15 +26,23 @@ public class DishCategoryController {
     }
 
     @PostMapping()
-    public ResponseEntity<DishCategory> createNewEmptyDishCategory(@RequestBody DishCategoryNameDto name) {
-        DishCategory dishCategory = dishCategoryService.createNewEmptyDishCategory(name.getName());
+    public ResponseEntity<DishCategoryDto> createNewEmptyDishCategory(@RequestBody DishCategoryNameDto name) {
+        try {
+        DishCategoryDto dishCategory = dishCategoryService.createNewEmptyDishCategory(name.getName());
         return ResponseEntity.ok(dishCategory);
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(415).body(null);
+        }
     }
 
-    @GetMapping("/toggleIsEnable/{id}")
-    public ResponseEntity<DishCategoryDto> toggleIsEnable(@PathVariable Long id, @RequestBody ToggleIsDishEnable isEnabled) {
-        DishCategoryDto dishCategory = dishCategoryService.toggleIsEnable(id, isEnabled.isEnabled());
-        return ResponseEntity.ok(dishCategory);
+    @PostMapping("/editName/{id}")
+    public ResponseEntity<DishCategoryDto> editName(@RequestBody DishCategoryNameDto name, @PathVariable Long id) {
+        try{
+            DishCategoryDto dishCategoryDto = dishCategoryService.editName(name.getName(), id);
+            return ResponseEntity.ok(dishCategoryDto);
+        }catch (DishCategoryNotFound e){
+            return ResponseEntity.status(415).body(null);
+        }
     }
 
     @GetMapping("/getAll")
@@ -39,18 +50,38 @@ public class DishCategoryController {
         return ResponseEntity.ok(dishCategoryService.getAllDishCategories());
     }
 
-    @PostMapping("/addDish/{id}")
-    public ResponseEntity<DishCategoryDto> addDish(@RequestBody Dish dish, @PathVariable Long id) {
-        DishCategoryDto dishCategory = dishCategoryService.addDish(dish, id);
+    @PostMapping("/addDish")
+    public ResponseEntity<DishCategoryDto> addDish(@RequestBody DishWithCategoryId dish) {
+        DishCategoryDto dishCategory = dishCategoryService.addDish(dish);
         return ResponseEntity.ok(dishCategory);
+    }
+
+    @PostMapping("/moveDishCategory/{id}/{newIndex}")
+    public ResponseEntity<DishCategoryDto> moveDishCategory(@PathVariable Long id, @PathVariable Integer newIndex) {
+        try {
+            return ResponseEntity.ok().body(dishCategoryService.moveDishCategory(id, newIndex));
+        }catch (DishCategoryNotFound e){
+            return ResponseEntity.status(415).body(null);
+        }
+    }
+
+    @DeleteMapping("/removeDishCategory/{id}")
+    public ResponseEntity<ApiResponse> removeDishCategory(@PathVariable Long id) {
+        try {
+            dishCategoryService.removeDishCategory(id);
+            return ResponseEntity.ok(new ApiResponse("Dish category removed"));
+        }catch (DishCategoryNotFound e){
+            return ResponseEntity.status(415).body(null);
+        }
     }
 
 
 
     // utility endpoint to delete all dish categories
+
     @DeleteMapping("/deleteAll")
-    public ResponseEntity<String> deleteAll() {
+    public ResponseEntity<ApiResponse> deleteAll() {
         dishCategoryService.deleteAll();
-        return ResponseEntity.ok("All dish categories deleted");
+        return ResponseEntity.ok(new ApiResponse("removed"));
     }
 }

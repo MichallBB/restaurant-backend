@@ -17,7 +17,6 @@ import java.util.List;
 public class DishCategoryDto {
     private Long id;
     private String name;
-    private boolean isEnabled;
     private Integer position;
     private List<DishDto> dishes;
 
@@ -25,10 +24,12 @@ public class DishCategoryDto {
         DishCategoryDto dishCategoryDto = new DishCategoryDto();
         dishCategoryDto.setId(dishCategory.getId());
         dishCategoryDto.setName(dishCategory.getName());
-        dishCategoryDto.setEnabled(dishCategory.getIsEnabled());
         dishCategoryDto.setPosition(dishCategory.getPosition());
 
         List<Dish> dishes = dishCategory.getDish();
+        if (dishes == null) {
+            return dishCategoryDto;
+        }
         List<DishDto> dishDtos = new ArrayList<>();
         for (Dish dish : dishes) {
             dishDtos.add(DishDto.toDto(dish));

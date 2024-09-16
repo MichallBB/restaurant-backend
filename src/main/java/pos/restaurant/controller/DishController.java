@@ -9,6 +9,7 @@ import pos.restaurant.DTO.DishWithCategoryDto;
 import pos.restaurant.models.Dish;
 import pos.restaurant.records.ToggleIsDishEnable;
 import pos.restaurant.service.DishService;
+import pos.restaurant.utils.ApiResponse;
 
 import java.util.List;
 
@@ -23,8 +24,13 @@ public class DishController {
     }
 
     @DeleteMapping("/removeDish/{id}")
-    public void removeDish(@PathVariable Long id) {
-        dishService.removeDish(id);
+    public ResponseEntity<ApiResponse> removeDish(@PathVariable Long id) {
+        try {
+            dishService.removeDish(id);
+            return ResponseEntity.ok(new ApiResponse("Dish removed"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ApiResponse("Dish not found"));
+        }
     }
 
     @GetMapping("/getAllDishes")
@@ -37,5 +43,15 @@ public class DishController {
         DishDto dish = dishService.toggleIsEnable(id, isEnabled);
 
         return ResponseEntity.ok(dish);
+    }
+
+    @PostMapping("/editDish")
+    public ResponseEntity<ApiResponse> editDish(@RequestBody DishDto dishDto) {
+        try {
+            dishService.editDish(dishDto);
+            return ResponseEntity.ok(new ApiResponse("Dish edited"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new ApiResponse("Dish not found"));
+        }
     }
 }

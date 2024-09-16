@@ -3,10 +3,12 @@ package pos.restaurant.service;
 import org.springframework.stereotype.Service;
 import pos.restaurant.DTO.DishCategoryDto;
 import pos.restaurant.Mapper.DishCategoryMapper;
+import pos.restaurant.exceptions.DishCategoryNotFound;
 import pos.restaurant.models.Dish;
 import pos.restaurant.models.DishCategory;
 import pos.restaurant.repository.DishCategoryRepository;
 import pos.restaurant.repository.DishRepository;
+import pos.restaurant.utils.DishWithCategoryId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +29,13 @@ public class DishCategoryService {
         this.dishRepository = dishRepository;
     }
 
-    public DishCategory createNewEmptyDishCategory(String name) {
+    public DishCategoryDto createNewEmptyDishCategory(String name) {
         DishCategory dishCategory = new DishCategory();
         dishCategory.setName(name);
-        dishCategory.setEnabled(true);
+        // white space check
+        if (name.isEmpty() || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
         int position = dishCategoryRepository.findAll().size();
 
         if (position == 0) {
@@ -39,14 +44,7 @@ public class DishCategoryService {
             dishCategory.setPosition(position + 1);
         }
         DishCategory savedDishCategory = dishCategoryRepository.save(dishCategory);
-        return savedDishCategory;
-    }
-
-    public DishCategoryDto toggleIsEnable(Long id, boolean isEnabled) {
-        DishCategory dishCategory = dishCategoryRepository.findById(id).orElseThrow();
-        dishCategory.setEnabled(isEnabled);
-        DishCategory updatedDishCategory = dishCategoryRepository.save(dishCategory);
-        return DishCategoryDto.toDto(updatedDishCategory);
+        return DishCategoryDto.toDto(savedDishCategory);
     }
 
 
@@ -59,8 +57,8 @@ public class DishCategoryService {
         return dishCategoryDtos;
     }
 
-    public DishCategoryDto addDish(Dish dish, Long id) {
-        DishCategory dishCategory = dishCategoryRepository.findById(id).orElseThrow();
+    public DishCategoryDto addDish(DishWithCategoryId dish) {
+        DishCategory dishCategory = dishCategoryRepository.findById(dish.getDishCategoryId()).orElseThrow();
 
         Dish persistDish = new Dish();
         persistDish.setName(dish.getName());
@@ -74,6 +72,38 @@ public class DishCategoryService {
         DishCategory updatedDishCategory = dishCategoryRepository.save(dishCategory);
 
         return DishCategoryDto.toDto(updatedDishCategory);
+    }
+
+    public DishCategoryDto moveDishCategory(Long id, Integer newIndex){
+        DishCategory dishCategory = dishCategoryRepository.findById(id).orElseThrow(
+                () -> new DishCategoryNotFound("Dish category not found")
+        );
+        List<DishCategory> dishCategories = dishCategoryRepository.findAllByOrderByPositionAsc();
+        dishCategories.remove(dishCategory);
+        dishCategories.add(newIndex, dishCategory);
+        for (int i = 0; i < dishCategories.size(); i++) {
+            dishCategories.get(i).setPosition(i);
+        }
+        dishCategoryRepository.saveAll(dishCategories);
+
+        dishCategory = dishCategoryRepository.findById(id).orElseThrow();
+        return DishCategoryDto.toDto(dishCategory);
+    }
+
+    public DishCategoryDto editName(String name, Long id) {
+        DishCategory dishCategory = dishCategoryRepository.findById(id).orElseThrow(
+                () -> new DishCategoryNotFound("Dish category not found")
+        );
+        dishCategory.setName(name);
+        DishCategory updatedDishCategory = dishCategoryRepository.save(dishCategory);
+        return DishCategoryDto.toDto(updatedDishCategory);
+    }
+
+    public void removeDishCategory(Long id) {
+        DishCategory dishCategory = dishCategoryRepository.findById(id).orElseThrow(
+                () -> new DishCategoryNotFound("Dish category not found")
+        );
+        dishCategoryRepository.delete(dishCategory);
     }
 
 

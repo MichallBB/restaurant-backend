@@ -3,9 +3,13 @@ package pos.restaurant.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pos.restaurant.DTO.EmployeeAccountDto;
 import pos.restaurant.exceptions.EmployeeAccountNotFound;
+import pos.restaurant.exceptions.OldPinIncorrect;
+import pos.restaurant.exceptions.PinCannotBeTheSame;
 import pos.restaurant.jwt.JwtService;
 import pos.restaurant.models.EmployeeAccount;
 import pos.restaurant.models.Role;
@@ -18,10 +22,16 @@ import java.util.List;
 public class EmployeeAccountService {
     private final EmployeeAccountRepository employeeAccountRepository;
     private JwtService jwtService;
+    private PasswordEncoder passwordEncoder;
 
-    public EmployeeAccountService(EmployeeAccountRepository employeeAccountRepository, JwtService jwtService) {
+    public EmployeeAccountService(
+            PasswordEncoder passwordEncoder,
+            EmployeeAccountRepository employeeAccountRepository,
+            JwtService jwtService
+    ) {
         this.employeeAccountRepository = employeeAccountRepository;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
     public EmployeeAccountDto getEmployeeAccountById(Long id){
         EmployeeAccount employeeAccount = employeeAccountRepository.findById(id).orElseThrow(
@@ -70,5 +80,26 @@ public class EmployeeAccountService {
             employeeAccounts.put(role, employeeAccountDtoList);
         }
         return employeeAccounts;
+    }
+
+    public EmployeeAccountDto changePin(Long id, String newPin, String oldPin){
+        if(newPin.equals(oldPin)){
+            throw new PinCannotBeTheSame("New pin cannot be the same as old pin");
+        }
+        EmployeeAccount employeeAccount = employeeAccountRepository.findById(id).orElseThrow(
+                () -> new EmployeeAccountNotFound("Employee account not found")
+        );
+        if (!passwordEncoder.matches(oldPin, employeeAccount.getPin())){
+            throw new OldPinIncorrect("Old pin is incorrect");
+        }
+        if (newPin.length() != 4){
+            throw new IllegalArgumentException("Pin must be 4 digits");
+        }
+        if (!newPin.trim().matches("\\d+")) {
+            throw new IllegalArgumentException("Pin must be numeric");
+        }
+        employeeAccount.setPin(passwordEncoder.encode(newPin));
+        employeeAccountRepository.save(employeeAccount);
+        return EmployeeAccountDto.toDto(employeeAccount);
     }
 }
