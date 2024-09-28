@@ -20,7 +20,7 @@ public class OrderRequestDto {
     private Long id;
     private RestaurantTable tableNumber;
     private Long waiterId;
-    private List<Dish> dish;
+    private List<DishDto> dish;
 
     private int price;
     private int quantity;
@@ -37,7 +37,8 @@ public class OrderRequestDto {
         orderRestaurant.setId(orderRequestDto.getId());
         orderRestaurant.setRestaurantTable(orderRequestDto.getTableNumber());
         orderRestaurant.setWaiter(waiter);
-        orderRestaurant.setDish(orderRequestDto.getDish());
+        List<Dish> dishList = orderRequestDto.getDish().stream().map(DishDto::toEntity).toList();
+        orderRestaurant.setDish(dishList);
         orderRestaurant.setPrice(orderRequestDto.getPrice());
         orderRestaurant.setQuantity(orderRequestDto.getQuantity());
         orderRestaurant.setSpecialRequest(orderRequestDto.getSpecialRequest());

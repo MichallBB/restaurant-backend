@@ -2,6 +2,7 @@ package pos.restaurant.service;
 
 import org.springframework.stereotype.Service;
 import pos.restaurant.DTO.DishCategoryDto;
+import pos.restaurant.DTO.DishDto;
 import pos.restaurant.Mapper.DishCategoryMapper;
 import pos.restaurant.exceptions.DishCategoryNotFound;
 import pos.restaurant.models.Dish;
@@ -53,6 +54,24 @@ public class DishCategoryService {
         List<DishCategoryDto> dishCategoryDtos = new ArrayList<>();
         for (DishCategory dishCategory : dishCategories) {
             dishCategoryDtos.add(DishCategoryDto.toDto(dishCategory));
+        }
+        return dishCategoryDtos;
+    }
+
+    public List<DishCategoryDto> getAllEnabledDishCategories(){
+        List<DishCategory> dishCategories = dishCategoryRepository.findAllByOrderByPositionAsc();
+        List<DishCategoryDto> dishCategoryDtos = dishCategories.stream()
+                .map(DishCategoryDto::toDto)
+                .toList();
+
+        for (DishCategoryDto dishCategoryDto : dishCategoryDtos) {
+            List<DishDto> enabledDishes = new ArrayList<>();
+            for (DishDto dish : dishCategoryDto.getDishes()) {
+                if (dish.isEnabled()) {
+                    enabledDishes.add(dish);
+                }
+            }
+            dishCategoryDto.setDishes(enabledDishes);
         }
         return dishCategoryDtos;
     }

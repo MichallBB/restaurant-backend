@@ -50,6 +50,11 @@ public class DishCategoryController {
         return ResponseEntity.ok(dishCategoryService.getAllDishCategories());
     }
 
+    @GetMapping("/getAllEnabled")
+    public ResponseEntity<List<DishCategoryDto>> getAllEnabledDishCategories() {
+        return ResponseEntity.ok(dishCategoryService.getAllEnabledDishCategories());
+    }
+
     @PostMapping("/addDish")
     public ResponseEntity<DishCategoryDto> addDish(@RequestBody DishWithCategoryId dish) {
         DishCategoryDto dishCategory = dishCategoryService.addDish(dish);
