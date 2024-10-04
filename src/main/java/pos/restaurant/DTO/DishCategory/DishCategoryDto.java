@@ -1,9 +1,10 @@
-package pos.restaurant.DTO;
+package pos.restaurant.DTO.DishCategory;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pos.restaurant.DTO.Dish.DishDto;
 import pos.restaurant.models.Dish;
 import pos.restaurant.models.DishCategory;
 
@@ -26,16 +27,10 @@ public class DishCategoryDto {
         dishCategoryDto.setName(dishCategory.getName());
         dishCategoryDto.setPosition(dishCategory.getPosition());
 
-        List<Dish> dishes = dishCategory.getDish();
-        if (dishes == null) {
-            return dishCategoryDto;
-        }
-        List<DishDto> dishDtos = new ArrayList<>();
-        for (Dish dish : dishes) {
-            dishDtos.add(DishDto.toDto(dish));
+        if (dishCategory.getDish() != null) {
+            dishCategoryDto.setDishes(dishCategory.getDish().stream().map(DishDto::toDto).toList());
         }
 
-        dishCategoryDto.setDishes(dishDtos);
         return dishCategoryDto;
     }
 

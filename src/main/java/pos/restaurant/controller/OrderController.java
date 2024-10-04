@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pos.restaurant.DTO.OrderRequestDto;
-import pos.restaurant.DTO.OrderResponseDto;
-import pos.restaurant.models.OrderRestaurant;
+import pos.restaurant.DTO.Order.OrderRequestDto;
+import pos.restaurant.DTO.Order.OrderResponseDto;
 import pos.restaurant.service.OrderService;
 
 import java.util.List;

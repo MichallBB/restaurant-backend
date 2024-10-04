@@ -1,12 +1,13 @@
-package pos.restaurant.DTO;
+package pos.restaurant.DTO.Order;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pos.restaurant.DTO.Dish.DishWithCategoryNameDto;
 import pos.restaurant.models.Dish;
+import pos.restaurant.models.DishInOrder;
 import pos.restaurant.models.OrderRestaurant;
-import pos.restaurant.models.RestaurantTable;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,7 @@ public class OrderResponseDto {
     private Long id;
     private String tableNumber;
     private Long waiterId;
-    private List<DishWithCategoryDto> dish;
+    private List<DishInOrderDto> dishes;
 
     private int price;
     private int quantity;
@@ -27,18 +28,27 @@ public class OrderResponseDto {
     private Date orderStartTime;
     private Date orderEndTime;
 
-    private boolean isServed;
-    private boolean isPaid;
+    private boolean served;
+    private boolean paid;
 
     public static OrderResponseDto toDto(OrderRestaurant orderRestaurant) {
         OrderResponseDto orderResponseDto = new OrderResponseDto();
         orderResponseDto.setId(orderRestaurant.getId());
-        orderResponseDto.setTableNumber(orderRestaurant.getRestaurantTable().getTableNumber());
-        orderResponseDto.setWaiterId(orderRestaurant.getWaiter().getId());
-        List<Dish> dishList = orderRestaurant.getDish();
-        List<DishWithCategoryDto> dishWithCategoryDtoList =
-            dishList.stream().map(DishWithCategoryDto::toDto).toList();
-        orderResponseDto.setDish(dishWithCategoryDtoList);
+
+        if (orderRestaurant.getRestaurantTable() != null) {
+            orderResponseDto.setTableNumber(orderRestaurant.getRestaurantTable().getTableNumber());
+        }
+
+        if (orderRestaurant.getWaiter() != null){
+            orderResponseDto.setWaiterId(orderRestaurant.getWaiter().getId());
+        }
+
+        if (orderRestaurant.getDishes() != null) {
+            List<DishInOrderDto> dishes =
+                    orderRestaurant.getDishes().stream().map(DishInOrderDto::toDto).toList();
+            orderResponseDto.setDishes(dishes);
+        }
+
         orderResponseDto.setPrice(orderRestaurant.getPrice());
         orderResponseDto.setQuantity(orderRestaurant.getQuantity());
         orderResponseDto.setSpecialRequest(orderRestaurant.getSpecialRequest());

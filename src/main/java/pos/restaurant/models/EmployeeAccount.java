@@ -1,5 +1,6 @@
 package pos.restaurant.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.lang.NonNull;
@@ -16,7 +17,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
 public class EmployeeAccount implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -31,6 +31,10 @@ public class EmployeeAccount implements UserDetails {
     private boolean isEnabled = true;
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
+
+    @OneToMany(mappedBy = "waiter", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<OrderRestaurant> orders;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

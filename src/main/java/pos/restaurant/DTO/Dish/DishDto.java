@@ -1,8 +1,6 @@
-package pos.restaurant.DTO;
+package pos.restaurant.DTO.Dish;
 
-import jakarta.persistence.*;
 import pos.restaurant.models.Dish;
-import pos.restaurant.models.DishCategory;
 
 import lombok.*;
 
@@ -15,6 +13,8 @@ public class DishDto {
     private String name;
     private double price;
     private String description;
+    private boolean enabled;
+
 
     public boolean getIsEnabled() {
         return enabled;
@@ -23,9 +23,6 @@ public class DishDto {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
-    private boolean enabled;
-
 
     public static DishDto toDto(Dish dish) {
         DishDto dishDto = new DishDto();

@@ -1,13 +1,11 @@
-package pos.restaurant.DTO;
+package pos.restaurant.DTO.Order;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pos.restaurant.models.Dish;
-import pos.restaurant.models.EmployeeAccount;
-import pos.restaurant.models.OrderRestaurant;
-import pos.restaurant.models.RestaurantTable;
+import pos.restaurant.DTO.Dish.DishDto;
+import pos.restaurant.models.*;
 
 import java.util.Date;
 import java.util.List;
@@ -18,9 +16,9 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderRequestDto {
     private Long id;
-    private RestaurantTable tableNumber;
+    private RestaurantTable table;
     private Long waiterId;
-    private List<DishDto> dish;
+    private List<DishInOrderDto> dishes;
 
     private int price;
     private int quantity;
@@ -35,10 +33,15 @@ public class OrderRequestDto {
     public static OrderRestaurant toEntity(OrderRequestDto orderRequestDto, EmployeeAccount waiter) {
         OrderRestaurant orderRestaurant = new OrderRestaurant();
         orderRestaurant.setId(orderRequestDto.getId());
-        orderRestaurant.setRestaurantTable(orderRequestDto.getTableNumber());
+        orderRestaurant.setRestaurantTable(orderRequestDto.getTable());
         orderRestaurant.setWaiter(waiter);
-        List<Dish> dishList = orderRequestDto.getDish().stream().map(DishDto::toEntity).toList();
-        orderRestaurant.setDish(dishList);
+
+        if (orderRequestDto.getDishes() != null) {
+            List<DishInOrder> dishList = orderRequestDto.getDishes()
+                    .stream().map(DishInOrderDto::toEntity).toList();
+            orderRestaurant.setDishes(dishList);
+        }
+
         orderRestaurant.setPrice(orderRequestDto.getPrice());
         orderRestaurant.setQuantity(orderRequestDto.getQuantity());
         orderRestaurant.setSpecialRequest(orderRequestDto.getSpecialRequest());

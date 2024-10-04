@@ -1,4 +1,4 @@
-package pos.restaurant.DTO;
+package pos.restaurant.DTO.DishCategory;
 
 import lombok.Getter;
 

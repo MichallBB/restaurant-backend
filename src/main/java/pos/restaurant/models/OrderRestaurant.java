@@ -9,7 +9,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -22,8 +21,8 @@ public class OrderRestaurant {
     @ManyToOne
     private EmployeeAccount waiter;
 
-    @ManyToMany
-    private List<Dish> dish;
+    @OneToMany(mappedBy = "orderRestaurant", cascade = CascadeType.ALL)
+    private List<DishInOrder> dishes;
 
     private int price;
     private int quantity;

@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class DishCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

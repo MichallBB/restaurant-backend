@@ -1,8 +1,8 @@
 package pos.restaurant.service;
 
 import org.springframework.stereotype.Service;
-import pos.restaurant.DTO.DishDto;
-import pos.restaurant.DTO.DishWithCategoryDto;
+import pos.restaurant.DTO.Dish.DishDto;
+import pos.restaurant.DTO.Dish.DishWithCategoryNameDto;
 import pos.restaurant.models.Dish;
 import pos.restaurant.records.ToggleIsDishEnable;
 import pos.restaurant.repository.DishRepository;
@@ -24,15 +24,15 @@ public class DishService {
         dishRepository.deleteById(id);
     }
 
-    public List<DishWithCategoryDto> getAllDishes() {
+    public List<DishWithCategoryNameDto> getAllDishes() {
         List<Dish> dish = dishRepository.findAll();
         dish.sort(new DishCategoryNameComparator());
-        List<DishWithCategoryDto> dishWithCategoryDtos = new ArrayList<>();
+        List<DishWithCategoryNameDto> dishWithCategoryNameDtos = new ArrayList<>();
         for (Dish d : dish) {
-            dishWithCategoryDtos.add(DishWithCategoryDto.toDto(d));
+            dishWithCategoryNameDtos.add(DishWithCategoryNameDto.toDto(d));
         }
 
-        return dishWithCategoryDtos;
+        return dishWithCategoryNameDtos;
     }
 
     public DishDto toggleIsEnable(Long id, ToggleIsDishEnable isEnabled) {

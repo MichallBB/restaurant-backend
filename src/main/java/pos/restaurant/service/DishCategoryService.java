@@ -1,8 +1,8 @@
 package pos.restaurant.service;
 
 import org.springframework.stereotype.Service;
-import pos.restaurant.DTO.DishCategoryDto;
-import pos.restaurant.DTO.DishDto;
+import pos.restaurant.DTO.DishCategory.DishCategoryDto;
+import pos.restaurant.DTO.Dish.DishDto;
 import pos.restaurant.Mapper.DishCategoryMapper;
 import pos.restaurant.exceptions.DishCategoryNotFound;
 import pos.restaurant.models.Dish;

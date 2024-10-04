@@ -1,12 +1,10 @@
 package pos.restaurant.controller;
 
-import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pos.restaurant.DTO.DishDto;
-import pos.restaurant.DTO.DishWithCategoryDto;
-import pos.restaurant.models.Dish;
+import pos.restaurant.DTO.Dish.DishDto;
+import pos.restaurant.DTO.Dish.DishWithCategoryNameDto;
 import pos.restaurant.records.ToggleIsDishEnable;
 import pos.restaurant.service.DishService;
 import pos.restaurant.utils.ApiResponse;
@@ -34,7 +32,7 @@ public class DishController {
     }
 
     @GetMapping("/getAllDishes")
-    public ResponseEntity<List<DishWithCategoryDto>>  getAllDishes() {
+    public ResponseEntity<List<DishWithCategoryNameDto>>  getAllDishes() {
         return ResponseEntity.ok(dishService.getAllDishes());
     }
 

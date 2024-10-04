@@ -3,17 +3,13 @@ package pos.restaurant.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pos.restaurant.DTO.DishCategoryDto;
-import pos.restaurant.DTO.DishCategoryNameDto;
+import pos.restaurant.DTO.DishCategory.DishCategoryDto;
+import pos.restaurant.DTO.DishCategory.DishCategoryNameDto;
 import pos.restaurant.exceptions.DishCategoryNotFound;
-import pos.restaurant.models.Dish;
-import pos.restaurant.models.DishCategory;
-import pos.restaurant.records.ToggleIsDishEnable;
 import pos.restaurant.service.DishCategoryService;
 import pos.restaurant.utils.ApiResponse;
 import pos.restaurant.utils.DishWithCategoryId;
 
-import java.lang.annotation.Documented;
 import java.util.List;
 
 @Controller
