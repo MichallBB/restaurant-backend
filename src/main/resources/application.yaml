@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-crhfgql6l47c73c82pe0-a.frankfurt-postgres.render.com:5432/new_zzlj
-    username: new_zzlj_user
-    password: nS24moNWPXxC2M7yeFhkUY51ku1FlGsP
+    url: jdbc:postgresql://dpg-cs8c7pm8ii6s73c83o8g-a.frankfurt-postgres.render.com:5432/db_56ab
+    username: user
+    password: lu79Mxoj4oQVSm1YK2D7L8rBVaFmkXk0
   jpa:
     hibernate:
       ddl-auto: update

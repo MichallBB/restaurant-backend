@@ -68,6 +68,12 @@
             <version>2.2.0</version>
         </dependency>
 
+        <!-- WEBSOCKET -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
         <!-- MAPPER -->
         <dependency>
             <groupId>org.mapstruct</groupId>

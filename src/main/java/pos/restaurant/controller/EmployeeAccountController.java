@@ -31,6 +31,11 @@ public class EmployeeAccountController {
         return ResponseEntity.ok(employeeAccountService.getAllEmployeeAccounts());
     }
 
+    @GetMapping("/allSortedByRole")
+    public ResponseEntity<List<EmployeeAccountDto>> getAllEmployeeAccountsSortedByRole(){
+        return ResponseEntity.ok(employeeAccountService.getAllEmployeesSortedByRole());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeAccountDto> getEmployeeAccountById(@PathVariable Long id){
         try {

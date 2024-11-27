@@ -3,10 +3,7 @@ package pos.restaurant.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pos.restaurant.DTO.Order.OrderRequestDto;
 import pos.restaurant.DTO.Order.OrderResponseDto;
 import pos.restaurant.service.OrderService;
@@ -35,5 +32,15 @@ public class OrderController {
     @GetMapping("/getOrders")
     public ResponseEntity<List<OrderResponseDto>> getOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    @GetMapping("/endOrder/{id}")
+    public ResponseEntity<OrderResponseDto> endTheOrder(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.endTheOrder(id));
+    }
+
+    @GetMapping("/getAllActiveOrders")
+    public ResponseEntity<List<OrderResponseDto>> getAllActiveOrders() {
+        return ResponseEntity.ok(orderService.getAllActiveOrders());
     }
 }

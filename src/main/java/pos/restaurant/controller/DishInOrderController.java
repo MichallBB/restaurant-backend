@@ -17,8 +17,11 @@ import java.util.List;
 @RequestMapping("/api/dishinorder")
 public class DishInOrderController {
     private final DishInOrderService dishInOrderService;
-    public DishInOrderController(DishInOrderService dishInOrderService) {
+
+    private final WebSocketController webSocketController;
+    public DishInOrderController(DishInOrderService dishInOrderService, WebSocketController webSocketController) {
         this.dishInOrderService = dishInOrderService;
+        this.webSocketController = webSocketController;
     }
 
     @GetMapping("/getAllDishInOrder")
@@ -28,11 +31,15 @@ public class DishInOrderController {
 
     @GetMapping("/toggleCooked/{id}")
     public ResponseEntity<DishInOrderDto> toggleCooked(@PathVariable Long id,@RequestParam boolean cooked) {
-        return ResponseEntity.ok().body(dishInOrderService.toggleCooked(id, cooked));
+        DishInOrderDto dishInOrderDto = dishInOrderService.toggleCooked(id, cooked);
+        webSocketController.sendCookeddDishId(id);
+        return ResponseEntity.ok().body(dishInOrderDto);
     }
 
     @GetMapping("/toggleServed/{id}")
     public ResponseEntity<DishInOrderDto> toggleServed(@PathVariable Long id,@RequestParam boolean served) {
-        return ResponseEntity.ok().body(dishInOrderService.toggleServed(id, served));
+        DishInOrderDto dishInOrderDto = dishInOrderService.toggleServed(id, served);
+        webSocketController.sendServedDishId(id);
+        return ResponseEntity.ok().body(dishInOrderDto);
     }
 }

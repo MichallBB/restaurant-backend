@@ -26,6 +26,8 @@ import pos.restaurant.models.Role;
 import pos.restaurant.service.CustomUserDetailsService;
 import pos.restaurant.service.EmployeeAccountService;
 
+import java.net.http.WebSocket;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity

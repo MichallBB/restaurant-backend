@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface EmployeeAccountRepository extends JpaRepository<EmployeeAccount, Long> {
     boolean existsById(Long id);
     List<EmployeeAccount> findAllByRole(Role role);
+
+    List<EmployeeAccount> findAllByOrderByRole();
 }

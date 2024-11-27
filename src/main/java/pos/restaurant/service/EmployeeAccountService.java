@@ -82,6 +82,11 @@ public class EmployeeAccountService {
         return employeeAccounts;
     }
 
+    public List<EmployeeAccountDto> getAllEmployeesSortedByRole(){
+        List<EmployeeAccount> employeeAccounts = employeeAccountRepository.findAllByOrderByRole();
+        return employeeAccounts.stream().map(EmployeeAccountDto::toDto).toList();
+    }
+
     public EmployeeAccountDto changePin(Long id, String newPin, String oldPin){
         if(newPin.equals(oldPin)){
             throw new PinCannotBeTheSame("New pin cannot be the same as old pin");

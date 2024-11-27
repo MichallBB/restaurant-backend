@@ -25,9 +25,7 @@ public class OrderRequestDto {
     private String specialRequest;
     private Date orderStartTime;
     private Date orderEndTime;
-
-    private boolean isServed;
-    private boolean isPaid;
+    private boolean orderEnded;
 
 
     public static OrderRestaurant toEntity(OrderRequestDto orderRequestDto, EmployeeAccount waiter) {
@@ -47,8 +45,7 @@ public class OrderRequestDto {
         orderRestaurant.setSpecialRequest(orderRequestDto.getSpecialRequest());
         orderRestaurant.setOrderStartTime(orderRequestDto.getOrderStartTime());
         orderRestaurant.setOrderEndTime(orderRequestDto.getOrderEndTime());
-        orderRestaurant.setServed(orderRequestDto.isServed());
-        orderRestaurant.setPaid(orderRequestDto.isPaid());
+        orderRestaurant.setOrderEnded(orderRequestDto.isOrderEnded());
         return orderRestaurant;
     }
 }

@@ -27,9 +27,7 @@ public class OrderResponseDto {
     private String specialRequest;
     private Date orderStartTime;
     private Date orderEndTime;
-
-    private boolean served;
-    private boolean paid;
+    private boolean orderEnded;
 
     public static OrderResponseDto toDto(OrderRestaurant orderRestaurant) {
         OrderResponseDto orderResponseDto = new OrderResponseDto();
@@ -54,8 +52,7 @@ public class OrderResponseDto {
         orderResponseDto.setSpecialRequest(orderRestaurant.getSpecialRequest());
         orderResponseDto.setOrderStartTime(orderRestaurant.getOrderStartTime());
         orderResponseDto.setOrderEndTime(orderRestaurant.getOrderEndTime());
-        orderResponseDto.setServed(orderRestaurant.isServed());
-        orderResponseDto.setPaid(orderRestaurant.isPaid());
+        orderResponseDto.setOrderEnded(orderRestaurant.isOrderEnded());
         return orderResponseDto;
     }
 }

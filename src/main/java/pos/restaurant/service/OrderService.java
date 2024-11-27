@@ -15,6 +15,7 @@ import pos.restaurant.models.OrderRestaurant;
 import pos.restaurant.repository.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -47,7 +48,7 @@ public class OrderService {
                 () -> new EmployeeAccountNotFound("Employee account not found")
         );
 
-        List<OrderRestaurant> orders = orderRepository.findAllByWaiterId(employeeAccount.getId());
+        List<OrderRestaurant> orders = orderRepository.findAllByWaiterIdAndOrderEndedIsFalse(employeeAccount.getId());
 
         return orders.stream().map(OrderResponseDto::toDto).toList();
     }
@@ -83,6 +84,7 @@ public class OrderService {
         orderRestaurant.setPrice(price);
 
         orderRestaurant.setDishes(dishInOrders);
+        orderRestaurant.setOrderEnded(false);
         OrderRestaurant orderRestaurant1 = orderRepository.save(orderRestaurant);
 
         restaurantTableRepository.save(orderRestaurant1.getRestaurantTable());
@@ -104,4 +106,24 @@ public class OrderService {
         return orderResponseDtos;
     }
 
+    public OrderResponseDto endTheOrder(Long id) {
+        OrderRestaurant orderRestaurant = orderRepository.findById(id).orElseThrow(
+                () -> new EmployeeAccountNotFound("Order not found")
+        );
+
+        orderRestaurant.setOrderEnded(true);
+        orderRepository.save(orderRestaurant);
+
+        return OrderResponseDto.toDto(orderRestaurant);
+    }
+
+    public List<OrderResponseDto> getAllActiveOrders() {
+        List<OrderRestaurant> orderRestaurant = orderRepository.findAllByOrderEndedIsFalse();
+        List<OrderResponseDto> orderResponseDtos =
+                orderRestaurant.stream().map(OrderResponseDto::toDto).toList();
+
+        return orderResponseDtos.stream()
+                .sorted(Comparator.comparing(OrderResponseDto::getOrderStartTime))
+                .toList();
+    }
 }
