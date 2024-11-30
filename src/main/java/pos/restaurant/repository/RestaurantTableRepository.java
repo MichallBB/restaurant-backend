@@ -7,5 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RestaurantTableRepository extends JpaRepository<RestaurantTable, Long> {
-    Optional<List<RestaurantTable>> findByTableNumber(String tableNumber);
+    Optional<RestaurantTable> findByTableNumber(String tableNumber);
+    boolean existsByTableNumber(String tableNumber);
+    void deleteByTableNumber(String tableNumber);
 }

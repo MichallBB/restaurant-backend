@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pos.restaurant.DTO.AuthResponseDto;
+import pos.restaurant.DTO.EmployeeAccountDto;
 import pos.restaurant.DTO.LoginDTO;
 import pos.restaurant.DTO.RegisterDTO;
 import pos.restaurant.jwt.JwtService;
@@ -55,7 +56,7 @@ public class AuthController{
     }
 
     @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody RegisterDTO registerDto) {
+    public ResponseEntity<EmployeeAccountDto> register(@RequestBody RegisterDTO registerDto) {
         EmployeeAccount userEntity = new EmployeeAccount();
         userEntity.setName(registerDto.getName());
         userEntity.setRole(registerDto.getRole());
@@ -63,7 +64,8 @@ public class AuthController{
 
 
         employeeAccountRepository.save(userEntity);
+        EmployeeAccountDto userDto = EmployeeAccountDto.toDto(userEntity);
 
-        return new ResponseEntity<>("Success, user registered!", HttpStatus.OK);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }

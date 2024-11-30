@@ -44,7 +44,7 @@ public class DishController {
     }
 
     @PostMapping("/editDish")
-    public ResponseEntity<ApiResponse> editDish(@RequestBody DishDto dishDto) {
+    public ResponseEntity<ApiResponse> editDish(@RequestBody DishWithCategoryNameDto dishDto) {
         try {
             dishService.editDish(dishDto);
             return ResponseEntity.ok(new ApiResponse("Dish edited"));

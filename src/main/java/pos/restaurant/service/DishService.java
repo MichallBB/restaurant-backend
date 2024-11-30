@@ -42,7 +42,7 @@ public class DishService {
         return DishDto.toDto(updatedDish);
     }
 
-    public void editDish(DishDto dishDto) {
+    public void editDish(DishWithCategoryNameDto dishDto) {
 
     }
 }
