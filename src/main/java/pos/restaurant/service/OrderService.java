@@ -8,15 +8,11 @@ import pos.restaurant.DTO.EmployeeAccountDto;
 import pos.restaurant.DTO.Order.OrderRequestDto;
 import pos.restaurant.DTO.Order.OrderResponseDto;
 import pos.restaurant.exceptions.EmployeeAccountNotFound;
-import pos.restaurant.models.Dish;
-import pos.restaurant.models.DishInOrder;
-import pos.restaurant.models.EmployeeAccount;
-import pos.restaurant.models.OrderRestaurant;
+import pos.restaurant.models.*;
 import pos.restaurant.repository.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.sql.Time;
+import java.util.*;
 
 @Service
 public class OrderService {
@@ -27,18 +23,22 @@ public class OrderService {
     private final EmployeeAccountRepository employeeAccountRepository;
     private final RestaurantTableRepository restaurantTableRepository;
     private final DishInOrderRepository dishInOrderRepository;
+    private final OrdersHistoryService ordersHistoryService;
+    private final DishHistoryService dishHistoryService;
 
     public OrderService(OrderRepository orderRepository, DishRepository dishRepository,
                         EmployeeAccountService employeeAccountService,
                         EmployeeAccountRepository employeeAccountRepository,
                         RestaurantTableRepository restaurantTableRepository,
-                        DishInOrderRepository dishInOrderRepository) {
+                        DishInOrderRepository dishInOrderRepository, OrdersHistoryService ordersHistoryService, DishHistoryService dishHistoryService) {
         this.orderRepository = orderRepository;
         this.dishRepository = dishRepository;
         this.employeeAccountService = employeeAccountService;
         this.employeeAccountRepository = employeeAccountRepository;
         this.restaurantTableRepository = restaurantTableRepository;
         this.dishInOrderRepository = dishInOrderRepository;
+        this.ordersHistoryService = ordersHistoryService;
+        this.dishHistoryService = dishHistoryService;
     }
 
     public List<OrderResponseDto> getAllWaiterOrders(HttpServletRequest request) {
@@ -63,6 +63,7 @@ public class OrderService {
         orderRestaurant.setId(null);
 
         List<DishInOrder> dishInOrders = new ArrayList<>();
+        dishHistoryService.createDishHistory(orderRestaurant.getDishes());
         for (DishInOrder dishInOrder : orderRestaurant.getDishes()) {
             Dish dish = dishRepository.findById(dishInOrder.getDish().getId()).orElseThrow(
                     () -> new EmployeeAccountNotFound("Dish not found")
@@ -88,7 +89,7 @@ public class OrderService {
         OrderRestaurant orderRestaurant1 = orderRepository.save(orderRestaurant);
 
         restaurantTableRepository.save(orderRestaurant1.getRestaurantTable());
-
+        ordersHistoryService.createOrderHistory(new Date(), waiter.getName());
         return OrderResponseDto.toDto(orderRestaurant1);
     }
 
